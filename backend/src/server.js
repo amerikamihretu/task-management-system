@@ -2,11 +2,16 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+if (!process.env.JWT_SECRET) {
+  console.warn('JWT_SECRET is not set. Authentication tokens cannot be created safely.');
+}
 
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
 app.use(express.json());
@@ -18,6 +23,8 @@ app.get('/api/health', (_req, res) => {
     database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   });
 });
+
+app.use('/api/auth', authRoutes);
 
 app.use((_req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
@@ -37,9 +44,7 @@ const start = async () => {
       console.warn('MONGODB_URI is not set; starting without a database connection');
     }
 
-    app.listen(port, () => {
-      console.log(`API listening on http://localhost:${port}`);
-    });
+    app.listen(port, () => console.log(`API listening on http://localhost:${port}`));
   } catch (error) {
     console.error('Failed to start server:', error.message);
     process.exit(1);
