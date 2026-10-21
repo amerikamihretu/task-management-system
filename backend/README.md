@@ -1,10 +1,8 @@
 # Backend API
 
-The backend now includes the initial authentication API.
+The backend includes JWT authentication and task CRUD APIs.
 
 ## Environment
-
-Copy `.env.example` to `.env` and set:
 
 ```env
 PORT=5000
@@ -21,9 +19,17 @@ npm install
 npm run dev
 ```
 
-## Current endpoints
+## Endpoints
 
 - `GET /api/health`
-- `POST /api/auth/register` with `{ "name", "email", "password" }`
-- `POST /api/auth/login` with `{ "email", "password" }`
-- `GET /api/auth/me` with `Authorization: Bearer <token>`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+- `GET /api/tasks`
+- `POST /api/tasks`
+- `GET /api/tasks/:id`
+- `PATCH /api/tasks/:id`
+- `PATCH /api/tasks/:id/status`
+- `DELETE /api/tasks/:id`
+
+Task endpoints require `Authorization: Bearer <token>`.
